@@ -91,12 +91,12 @@ function WebSocketController($scope) {
 
     // Servo On button click.
     $scope.servoOn = function () {
-        ws.send('servoOn');
+        ws.send('on');
     };
     
     // Servo Off button click.
     $scope.servoOff = function () {
-        ws.send('servoOff');
+        ws.send('off');
     };
 
 }
