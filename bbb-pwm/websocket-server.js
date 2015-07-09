@@ -59,11 +59,13 @@ wss.on('connection', function(ws) {
       if (tag == 'off') {
         pwm.forEach(function(p) {p.turnOff();});
         ws.send('PWM OFF');
+	console.log("Servo Off")
       }
       // set run to 1.
       else if (tag == 'on') {
         pwm.forEach(function(p) {p.turnOn();});
         ws.send('PWM On');
+	console.log("Servo On")
       }
       // set the duty cycle.
       else if (tag== "yaw") {
