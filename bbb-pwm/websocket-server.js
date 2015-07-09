@@ -1,5 +1,10 @@
 //modules
 var WebSocketServer = require('ws').Server;
+var fs = require("fs");
+fs.watchFile("/dev/eye", function (curr,prev) {
+  console.log("eye value: "+ curr);
+});
+// Setup capes
 var sys = require('sys')
 var exec = require('child_process').exec;
 function puts(error, stdout, stderr) { sys.puts(stdout) }
