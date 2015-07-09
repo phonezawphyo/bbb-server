@@ -1,0 +1,144 @@
+## ===============
+## Running servers
+## ===============
+
+# Access the board
+ssh root@192.168.7.2
+
+
+# Onboard server location
+/var/lib/cloud9/websocket-server/beaglebone-black/bbb-pwm
+run `node websocket-server.js`
+on bbb.
+
+
+# Remote control source code location
+~/websocket-client
+・Copy the source code to your computer and run
+`node web-server.js` on your computer
+
+## =================
+## PWM pin debugging
+## =================
+
+# PWM pin diagram
+http://beagleboard.org/support/BoneScript/analogWrite/
+
+
+# usable pwm ports
+P8_13
+P9_22
+P9_42
+
+# Check available PWM slots
+ls /lib/firmware/*pwm*
+
+# Slots
+more /sys/devices/bone_capemgr.*/slots
+
+# To mount into slow
+echo am33xx_pwm > /sys/devices/bone_capemgr.9/slots 
+echo bone_pwm_P8_13 > /sys/devices/bone_capemgr.9/slots
+
+
+# Enable slot permanent
+vim /boot/uboot/uEnv.txt
+
+optargs=quiet drm.debug=7 capemgr.enable_partno=am33xx_pwm,bone_pwm_P8_13,bone_pwm_P8_45,bone_pwm_P8_46
+
+# Check the period, and duty cycle
+ls /sys/devices/ocp.*/pwm_test_P8_13.1*/
+
+# Check period
+cat /sys/devices/ocp.*/pwm_test_P8_13.1*/period
+
+# Set period
+echo 5000000 > /sys/devices/ocp.*/pwm_test_P8_13*/period
+echo 5000000 > /sys/devices/ocp.*/pwm_test_P9_22*/period
+echo 5000000 > /sys/devices/ocp.*/pwm_test_P9_42*/period
+
+## ======================
+## Additional information
+## ======================
+
+# pwm problem
+http://saadahmad.ca/using-pwm-on-the-beaglebone-black/
+# kernel compile patch
+https://randomlinuxhacks.wordpress.com/2014/09/16/changing-pwm-period-on-beaglebone-black/
+# solution
+https://github.com/SaadAhmad/beaglebone-black-cpp-PWM
+
+# Compiling device overlay   
+https://learn.adafruit.com/introduction-to-the-beaglebone-black-device-tree/compiling-an-overlay
+
+dtc -O dtb -o ADAFRUIT-SPI0-00A0.dtbo -b 0 -@ ADAFRUIT-SPI0-00A0.dts
+
+P8_13 layout file =>  
+https://github.com/beagleboard/devicetree-source/blob/master/arch/arm/boot/dts/bone_pwm_P8_13-00A0.dts
+
+# Internet sharing with OS X
+1. Watch this video: http://www.youtube.com/watch?v=Cf9hnscbSK8 
+2. If your BBB was shipped after November 2013, instead of screen /dev/tty.usb*B 115200 use screen /dev/tty.usb* 115200 and actually you need to go to the /dev directory and check which of the tty.usbXXX is available for your BBB and screen it. In my case it was tty.usb131 for example
+3. You continue the steps just like in the video until opkg update which would be the thing you need to do over the internet 
+
+Need udhcpc command.
+# Download udhcpc
+https://gist.github.com/tcr/7f753f93b671733c9e72
+# Change bob default ip addresses
+http://ewong.me/changing-usb0-ip-address-on-the-beaglebone-black/
+====
+/etc/network/interfaces
+/opt/scripts/boot/am335x_evm.sh
+/etc/udhcpd.conf
+====
+In /etc/network/interfaces and /opt/scripts/boot/am335x_evm.sh, change "192.68.7.2" to "192.68.8.2" (or whatever you want the new IP address to be).
+
+In /etc/udhcpd.conf, change "192.168.7.1" to "192.168.8.1" in two places. This file configures the DHCP IP address that is given to your PC when it initializes the USB virtual ethernet internet. Keep in mind that the default netmask for the usb0 interface is 255.255.255.252, so make sure your new IP addresses are compatible with that.
+
+After making these changes and rebooting, the IP address for usb0 on your BeagleBone Black should be 192.168.8.2 and the IP address for the virtual ethernet interface on the PC side should be 192.168.8.1.
+====
+#google groups (good try)
+https://groups.google.com/forum/#!topic/beagleboard/5yoQWMNfvH4
+
+
+# BBB opencv cross compiling
+http://thebbbdiary.blogspot.jp/2015/01/cross-compiling-opencv-on-os-x-for.html
+ARM cross-compiling on Mac OS-X Mavericks
+http://will-tm.com/cross-compiling-mac-os-x-mavericks/
+
+# Opencv on ubuntu
+https://solarianprogrammer.com/2014/04/21/opencv-beaglebone-black-ubuntu/
+
+# Webcam driver
+http://dumb-looks-free.blogspot.jp/2014/05/beaglebone-black-bbb-with-logitech-c270.html
+
+# List video devices
+https://trac.ffmpeg.org/wiki/Capture/Webcam
+
+v4l2-ctl --list-devices
+v4l2-ctl --list-formats-ext
+ffmpeg -y -f video4linux2 -i /dev/video0
+
+# Capture frame
+apt-get install fswebcam
+fswebcam -S 5 -r 352x288 test.jpg
+
+# Capture video
+ffmpeg -f video4linux2 -framerate 25 -video_size 640x480 -i /dev/video0 output.mkv
+ffmpeg -f video4linux2 -r 25 -s 352x288 -t 5 -i /dev/video0 out.mpeg
+
+http://derekmolloy.ie/beaglebone/beaglebone-video-capture-and-image-processing-on-embedded-linux-using-opencv/
+
+
+# View image in terminal
+sudo apt-get install caca-utils
+cacaview /PATH/TO/image.jpg
+
+# Video stream
+http://bellbind.tumblr.com/post/62486278433/amazon-co-jp-ibuffalo-130-web
+
+# Adjust brightness
+v4l2-ctl --set-ctrl brightness=20
+
+# See the video in terminal
+mplayer -vo caca /PATH/TO/video.mpg
