@@ -142,3 +142,6 @@ v4l2-ctl --set-ctrl brightness=20
 
 # See the video in terminal
 mplayer -vo caca /PATH/TO/video.mpg
+
+# OpenCV Video capture sample cpp
+http://derekmolloy.ie/beaglebone/beaglebone-video-capture-and-image-processing-on-embedded-linux-using-opencv/
