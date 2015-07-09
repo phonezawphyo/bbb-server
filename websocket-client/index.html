@@ -20,6 +20,12 @@
   <strong ng-bind-template="Server Response: {{message}}"></strong>
   <br/>
 
+  <! 2-axis Controller >
+  <center>
+    <div bbb-two-axis-control>
+    </div>
+  </center>
+
   <! Yaw P8_13 >
   <div class="container">
     <strong class="pad-right">Yaw</strong>
@@ -69,6 +75,7 @@
   </div>
 
 
+  <! On/off switch >
   <div class="container">
     <button class="btn" ng-click="servoOn()">
       Servo On
@@ -76,11 +83,6 @@
     <button class="btn btn-danger" ng-click="servoOff()">
       Servo OFF
     </button>
-    <!--
-    <button class="btn btn-danger" ng-click="reset()">
-      Reset
-    </button>
-    -->
   </div>
   </section>
 
