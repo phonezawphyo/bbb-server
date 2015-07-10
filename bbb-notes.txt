@@ -137,11 +137,13 @@ cacaview /PATH/TO/image.jpg
 # Video stream
 http://bellbind.tumblr.com/post/62486278433/amazon-co-jp-ibuffalo-130-web
 
+mplayer -vf framestep=2 -vo caca -quiet out.mpg
 # Adjust brightness
 v4l2-ctl --set-ctrl brightness=20
 
 # See the video in terminal
 mplayer -vo caca /PATH/TO/video.mpg
+mplayer -vf framestep=2 -vo caca -quiet out.mpg
 
 # OpenCV Video capture sample cpp
 http://derekmolloy.ie/beaglebone/beaglebone-video-capture-and-image-processing-on-embedded-linux-using-opencv/
