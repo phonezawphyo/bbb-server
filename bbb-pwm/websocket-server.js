@@ -147,6 +147,14 @@ wss.on('connection', function(ws) {
       updateOutputs();
       console.log("Eye Off");
     }
+    else if (tag== "eye") {
+      // config.toggleEye = false;
+      console.log(message, parts[1]);
+      var eyeVals = parts[1].split(",");
+      eyeInput.x = parseInt(eyeVals[0]);
+      eyeInput.y = parseInt(eyeVals[1]);
+      updateOutputs();
+    }
   });
 
   // When connection closes.
