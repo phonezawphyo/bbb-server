@@ -3,9 +3,10 @@
 #include <Preprocess.hpp>
 #include <FaceDetection.hpp>
 #include <BeagleTracker.hpp>
+#include <fstream>
 
 //#define WITH_SCREEN
-
+  
 int main(int argc, char **argv){
 	#ifdef WITH_SCREEN
 	Screen screen;
@@ -18,6 +19,7 @@ int main(int argc, char **argv){
 	vector<Rect> faces;
 	Rect2d selected_face;
 	Point center = Point(DEFAULT_WIDTH/2, DEFAULT_HEIGHT/2);
+	fstream fs;
 	bool tracking = false;
 	bool initialized = false;
 	int skipFrame = 1;
@@ -35,7 +37,10 @@ int main(int argc, char **argv){
 				}
 				int fileX = (center.x - (selected_face.x+selected_face.width/2))/((DEFAULT_WIDTH-selected_face.width)/2)*100;
 				int fileY = (center.y - (selected_face.y+selected_face.height/2))/((DEFAULT_HEIGHT-selected_face.height)/2)*100;
-				cout << fileX << "," << fileY << endl;
+				fs.open("/dev/Eye", fstream::out);
+				fs << fileX << "," << fileY << endl;
+				//cout << fileX << "," << fileY << endl;
+				fs.close();
 			}
 			#ifdef WITH_SCREEN
 			screen.drawRectangle(img, selected_face);
