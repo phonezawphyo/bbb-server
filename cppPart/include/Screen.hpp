@@ -1,0 +1,26 @@
+/**
+*  Screen module
+*  Responsable for showing the images and drawing on it
+*/
+
+#ifndef SCREEN_HPP
+#define SCREEN_HPP
+
+#include <General.hpp>
+#include <opencv2/highgui.hpp>
+
+class Screen {
+private:
+	string screenName;
+	Mat currentFrame;
+
+public:
+	Screen();
+	Screen(string name);
+	~Screen();
+	void putImage(Mat img);
+	string getScreenName();
+};
+
+
+#endif
