@@ -10,7 +10,7 @@ public:
 	BeagleTracker();
 	~BeagleTracker();
 	void initialTraining(Mat img, Rect2d bounderies);
-	void update(Mat img, Rect2d& bounderies);
+	bool update(Mat img, Rect2d& bounderies);
 private:
 	Ptr<Tracker> tracker;
 };

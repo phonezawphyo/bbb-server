@@ -17,8 +17,8 @@ void BeagleTracker::initialTraining(Mat img, Rect2d bounderies){
 	}
 }
 
-void BeagleTracker::update(Mat img, Rect2d& bounderies){
-	tracker->update(img, bounderies);
+bool BeagleTracker::update(Mat img, Rect2d& bounderies){
+	return tracker->update(img, bounderies);
 }
 
 

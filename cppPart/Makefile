@@ -14,7 +14,16 @@ SOURCES = $(OBJECTS: .o=.cpp)
 $(OBJECTS):	$(SOURCES)
 			$(CC) -c $^ $(CFLAGS) $(LDFLAGS)  -o $@
 			mv $@ build/
+			
+manualVersion: BeagleTracker.cpp FaceDetection.cpp Preprocess.cpp Camera.cpp Screen.cpp mainManual.cpp
+			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
+			mv $@ build/
+			./build/$@
 
+autoVersion: BeagleTracker.cpp FaceDetection.cpp Preprocess.cpp Camera.cpp Screen.cpp mainAuto.cpp
+			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
+			mv $@ build/
+			./build/$@
 
 testScreen:	Screen.cpp testScreen.cpp
 			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
