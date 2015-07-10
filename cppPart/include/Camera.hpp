@@ -16,6 +16,8 @@ public:
 	~Camera();
 	Mat getImage();
 	bool isOpened();
+	void reopen(int camera_number);
+	void release();
 private:
 	VideoCapture cameraHandler;
 

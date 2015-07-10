@@ -39,3 +39,13 @@ Mat Camera::getImage(){
 bool Camera::isOpened(){
 	return cameraHandler.isOpened();
 }
+
+
+void Camera::reopen(int camera_number=0){
+	cameraHandler.open(camera_number);
+}
+
+void Camera::release(){
+	cameraHandler.release();
+}
+

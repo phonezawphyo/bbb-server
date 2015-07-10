@@ -36,7 +36,9 @@ int main(int argc, char **argv){
 	int skipFrame = 0;
 	char c = 0;
 	while(c!=27){
+		cam.reopen(0);
 		img = cam.getImage();
+		cam.release();
 		
 		if(tracking) {
 			if(!initialized){
