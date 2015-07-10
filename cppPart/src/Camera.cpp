@@ -11,6 +11,9 @@ Camera::Camera(){
     }
     cameraHandler.set(CV_CAP_PROP_FRAME_WIDTH, DEFAULT_WIDTH);
     cameraHandler.set(CV_CAP_PROP_FRAME_HEIGHT, DEFAULT_HEIGHT);
+    cameraHandler.set(CV_CAP_PROP_FOURCC ,CV_FOURCC('M', 'J', 'P', 'G'));
+    cameraHandler.set(CV_CAP_PROP_CONVERT_RGB , false);
+    cameraHandler.set(CV_CAP_PROP_FPS , 60);
 }
 
 Camera::Camera(int camera_number){
