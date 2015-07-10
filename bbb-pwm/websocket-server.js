@@ -40,7 +40,7 @@ var bbbPWM = require("./bbb-pwm");
 
 // Instantiate WebSocket server for Lab
 var wss = new WebSocketServer({
-    port: 8888 
+  port: 8888 
 });
 
 // Instantiate bbbPWM object to control PWM device.  Pass in device path
@@ -49,9 +49,10 @@ var pwm = [
   new bbbPWM('/sys/devices/ocp.3/pwm_test_P8_13.15/', 5000000),
   new bbbPWM('/sys/devices/ocp.3/pwm_test_P9_22.16/', 5000000),
   new bbbPWM('/sys/devices/ocp.3/pwm_test_P9_42.17/', 5000000),
-]
+];
 
 var config = {
+  toggleEye: true,
   minInput: -100,
   maxInput: 100,
   minDuty: 2510,
@@ -64,7 +65,11 @@ var config = {
 };
 
 var updateYaw = function () {
-  var duty = config.inputToDuty(remoteInput.yaw+eyeInput.x);
+  var i = remoteInput.yaw;
+  if (config.toggleEye) {
+    i = i + eyeInput.x;
+  }
+  var duty = config.inputToDuty(i);
   pwm[0].setDuty(duty);
   console.log("update yaw: "+duty);
 };
@@ -74,7 +79,11 @@ var updateRoll = function () {
   console.log("update roll: "+duty);
 };
 var updatePitch = function () {
-  var duty = config.inputToDuty(remoteInput.pitch+eyeInput.y);
+  var i = remoteInput.pitch;
+  if (config.toggleEye) {
+    i = i + eyeInput.y;
+  }
+  var duty = config.inputToDuty(i);
   pwm[2].setDuty(duty);
   console.log("update pitch: "+duty);
 };
@@ -87,52 +96,62 @@ var updateOutputs = function () {
 // Handle connections
 wss.on('connection', function(ws) {
 
-    // Send message to client that connection has been made
-    ws.send('Lab Connected!!!');
+  // Send message to client that connection has been made
+  ws.send('Lab Connected!!!');
 
-    console.log("Incoming communication!");
+  console.log("Incoming communication!");
 
-    // Handle incoming messages
-    ws.on('message', function(message) {
-      var parts = message.split(":");
-      var tag = parts[0];
-      var payload = parseInt(parts[1]);
-      var duty = 0;
+  // Handle incoming messages
+  ws.on('message', function(message) {
+    var parts = message.split(":");
+    var tag = parts[0];
+    var payload = parseInt(parts[1]);
+    var duty = 0;
 
-      if (!!payload) {
-        duty = config.inputToDuty(payload);
-      }
+    if (!!payload) {
+      duty = config.inputToDuty(payload);
+    }
 
-      // set run to 0.
-      if (tag == 'off') {
-        pwm.forEach(function(p) {p.turnOff();});
-        ws.send('PWM OFF');
-	console.log("Servo Off")
-      }
-      // set run to 1.
-      else if (tag == 'on') {
-        pwm.forEach(function(p) {p.turnOn();});
-        ws.send('PWM On');
-	console.log("Servo On")
-      }
-      // set the duty cycle.
-      else if (tag== "yaw") {
-        remoteInput.yaw = payload;
-        updateYaw();
-      }
-      else if (tag== "roll") {
-        remoteInput.roll = payload;
-        updateRoll();
-      }
-      else if (tag== "pitch") {
-        remoteInput.pitch = payload;
-        updatePitch();
-      }
-    });
+    // set run to 0.
+    if (tag == 'off') {
+      pwm.forEach(function(p) {p.turnOff();});
+      ws.send('PWM OFF');
+      console.log("Servo Off")
+    }
+    // set run to 1.
+    else if (tag == 'on') {
+      pwm.forEach(function(p) {p.turnOn();});
+      ws.send('PWM On');
+      console.log("Servo On")
+    }
+    // set the duty cycle.
+    else if (tag== "yaw") {
+      remoteInput.yaw = payload;
+      updateYaw();
+    }
+    else if (tag== "roll") {
+      remoteInput.roll = payload;
+      updateRoll();
+    }
+    else if (tag== "pitch") {
+      remoteInput.pitch = payload;
+      updatePitch();
+    }
+    else if (tag== "eyeOn") {
+      config.toggleEye = true;
+      updateOutputs();
+      console.log("Eye On");
+    }
+    else if (tag== "eyeOff") {
+      config.toggleEye = false;
+      updateOutputs();
+      console.log("Eye Off");
+    }
+  });
 
-    // When connection closes.
-    ws.on('close', function() {
-      console.log('stopping client interval');
-    });
+  // When connection closes.
+  ws.on('close', function() {
+    console.log('stopping client interval');
+  });
 
 });

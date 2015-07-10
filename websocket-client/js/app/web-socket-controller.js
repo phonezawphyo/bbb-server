@@ -113,4 +113,12 @@ function WebSocketController($scope) {
         ws.send('off');
     };
 
+    $scope.eyeOn= function () {
+        ws.send('eyeOn');
+    };
+    
+    $scope.eyeOff= function () {
+        ws.send('eyeOff');
+    };
+
 }
