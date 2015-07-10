@@ -35,3 +35,8 @@ testFaceDetection: FaceDetection.cpp Preprocess.cpp Camera.cpp Screen.cpp testFa
 			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 			mv $@ build/
 			./build/$@
+			
+testBeagleTracker: BeagleTracker.cpp Preprocess.cpp Camera.cpp Screen.cpp testBeagleTracker.cpp
+			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
+			mv $@ build/
+			./build/$@

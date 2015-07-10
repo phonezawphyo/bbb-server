@@ -7,6 +7,7 @@
 #define SCREEN_HPP
 
 #include <General.hpp>
+#include <opencv2/core/utility.hpp>
 #include <opencv2/highgui.hpp>
 
 class Screen {
@@ -20,6 +21,7 @@ public:
 	~Screen();
 	void putImage(Mat img);
 	string getScreenName();
+	void drawRectangle(Mat& img, Rect2d rect);
 };
 
 

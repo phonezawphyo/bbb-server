@@ -28,3 +28,7 @@ void Screen::putImage(Mat img){
 string Screen::getScreenName(){
 	return screenName;
 }
+
+void Screen::drawRectangle(Mat& img, Rect2d rect){
+	rectangle(img, rect, Scalar(255, 0, 0), 2, 1);
+}
