@@ -9,7 +9,8 @@ class FaceDetection {
 public:
 	FaceDetection();
 	~FaceDetection();
-	Rect detectFace(Mat img);
+	vector<Rect> detectFaces(Mat img);
+	void drawFaces(Mat& img, vector<Rect> faces);
 private:
 	CascadeClassifier faceCascade;
 };

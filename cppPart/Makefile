@@ -30,3 +30,8 @@ testPreprocess: Preprocess.cpp Camera.cpp Screen.cpp testPreprocess.cpp
 			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 			mv $@ build/
 			./build/$@
+
+testFaceDetection: FaceDetection.cpp Preprocess.cpp Camera.cpp Screen.cpp testFaceDetection.cpp
+			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
+			mv $@ build/
+			./build/$@
