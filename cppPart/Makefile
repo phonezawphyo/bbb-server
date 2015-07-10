@@ -24,6 +24,11 @@ autoVersion: BeagleTracker.cpp FaceDetection.cpp Preprocess.cpp Camera.cpp Scree
 			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 			mv $@ build/
 			./build/$@
+			
+faceOnly:	FaceDetection.cpp Preprocess.cpp Camera.cpp Screen.cpp faceOnly.cpp
+			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
+			mv $@ build/
+			./build/$@
 
 testScreen:	Screen.cpp testScreen.cpp
 			$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
