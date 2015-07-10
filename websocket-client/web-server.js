@@ -8,6 +8,38 @@ var util = require('util'),
 
 var DEFAULT_PORT = 8000;
 
+// WS
+var ws = require("nodejs-websocket");
+var connection = ws.connect("ws://192.168.7.2:8888",function () {
+  console.log("Websocket connected");
+});
+
+// Watch file
+var fs = require("fs");
+var eye = "/usr/eye";
+var eyeInput = {x:0,y:0};
+fs.exists(eye, function(exists) {
+  if (!exists) {
+    fs.writeFileSync(eye, "");
+  }
+
+  fs.watch(eye, function (e,filename) {
+    if (e!="change") {
+      return;
+    }
+    val = fs.readFile(eye, "utf8", function(err,data) {
+      if (!!data && data!="") {
+        var parts = data.split(",");
+        eyeInput.x = parseInt(parts[0]);
+        eyeInput.y = parseInt(parts[1]);
+        //updateOutputs();
+        connection.sendText("eye:"+eyeInput.x+","+eyeInput.y);
+        console.log("sending:", "eye:"+eyeInput.x+","+eyeInput.y);
+      }
+    });
+  });
+});
+
 function main(argv) {
   new HttpServer({
     'GET': createServlet(StaticServlet),
