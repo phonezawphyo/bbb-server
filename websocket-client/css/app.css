@@ -27,3 +27,8 @@ body, html {
 body {
   -webkit-user-select: none;
 }
+.btn,
+.btn:focus,
+.btn:active {
+  outline: none !important;
+}
