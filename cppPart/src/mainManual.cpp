@@ -3,6 +3,7 @@
 #include <Preprocess.hpp>
 #include <FaceDetection.hpp>
 #include <BeagleTracker.hpp>
+#include <fstream>
 
 static Point clicked;
 static bool clicked_flag = false;
@@ -23,7 +24,7 @@ static void onMouse(int event, int x, int y, int, void*)
 int main(int argc, char **argv){
 	Screen screen;
 	setMouseCallback(screen.getScreenName(), onMouse, 0);
-	Camera cam(0);
+	Camera cam(1);
 	FaceDetection face;
 	BeagleTracker tracker;
 	Mat img, processed;
@@ -31,14 +32,13 @@ int main(int argc, char **argv){
 	vector<Rect> faces;
 	Rect2d selected_face;
 	Point center = Point(DEFAULT_WIDTH/2, DEFAULT_HEIGHT/2);
+	fstream fs;
 	bool tracking = false;
 	bool initialized = false;
 	int skipFrame = 0;
 	char c = 0;
 	while(c!=27){
-		cam.reopen(0);
 		img = cam.getImage();
-		cam.release();
 		
 		if(tracking) {
 			if(!initialized){
@@ -47,10 +47,18 @@ int main(int argc, char **argv){
 			}else if(skipFrame == 0){
 				if(!tracker.update(img, selected_face)){
 					tracking = false;
+					fs.open("/usr/eye", fstream::out);
+					fs << "0,0";
+					cout << "0,0" << endl;
 				}
-				int fileX = (center.x - (selected_face.x+selected_face.width/2))/((DEFAULT_WIDTH-selected_face.width)/2)*100;
-				int fileY = (center.y - (selected_face.y+selected_face.height/2))/((DEFAULT_HEIGHT-selected_face.height)/2)*100;
-				cout << fileX << "," << fileY << endl;
+					int fileX = (center.x - (selected_face.x+selected_face.width/2))/((DEFAULT_WIDTH-selected_face.width)/2)*30;
+					int fileY = -(center.y - (selected_face.y+selected_face.height/2))/((DEFAULT_HEIGHT-selected_face.height)/2)*30;
+					fileX = (abs(fileX)<10)?0:fileX;
+					fileY = (abs(fileY)<10)?0:fileY;
+					fs.open("/usr/eye", fstream::out);
+					fs << fileX << "," << fileY;
+					cout << fileX << "," << fileY << endl;
+					fs.close();
 			}
 			screen.drawRectangle(img, selected_face);
 		}else{
@@ -76,7 +84,7 @@ int main(int argc, char **argv){
 				} 
 			}
 		}
-		skipFrame = (skipFrame+1)%10;
+		skipFrame = (skipFrame+1)%5;
 		screen.putImage(img);
 		c = waitKey(10);	
 	}
