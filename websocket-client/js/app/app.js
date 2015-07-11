@@ -40,8 +40,8 @@ angular.module('WebsocketClient',[])
         reset();
       });
 
-      var setPosition = function () {
-        var parentOffset = $(this).offset();
+      var setPosition = function (elem,e) {
+        var parentOffset = $(elem).offset();
         pos.x = posXToOutput(e.pageX - parentOffset.left);
         pos.y = posYToOutput(e.pageY - parentOffset.top);
         $elem.html("("+pos.x+","+pos.y+")");
@@ -52,10 +52,12 @@ angular.module('WebsocketClient',[])
         }
       };
 
-      $elem.on("mousemove", setPosition)
-      .on("mousedown", function () {
+      $elem.on("mousemove", function(e) {
+	setPosition(this,e);
+      })
+      .on("mousedown", function (e) {
         trigger = true;
-        setPosition();
+        setPosition(this,e);
       })
       .on("mouseup", function () {
         trigger = false;
