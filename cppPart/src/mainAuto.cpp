@@ -11,7 +11,7 @@ int main(int argc, char **argv){
 	#ifdef WITH_SCREEN
 	Screen screen;
 	#endif
-	Camera cam(0);
+	Camera cam(1);
 	FaceDetection face;
 	BeagleTracker tracker;
 	Mat img, processed;
@@ -35,7 +35,7 @@ int main(int argc, char **argv){
 			}else if(skipFrame == 0){
 				if(!tracker.update(img, selected_face)){
 					tracking = false;
-					fs.open("/dev/eye", fstream::out);
+					fs.open("/usr/eye", fstream::out);
 					fs << "0,0";
 					cout << "0,0" << endl;
 					fs.close();
@@ -44,7 +44,7 @@ int main(int argc, char **argv){
 					int fileY = -(center.y - (selected_face.y+selected_face.height/2))/((DEFAULT_HEIGHT-selected_face.height)/2)*25;
 					fileX = (abs(fileX)<10)?0:fileX;
 					fileY = (abs(fileY)<10)?0:fileY;
-					fs.open("/dev/eye", fstream::out);
+					fs.open("/usr/eye", fstream::out);
 					fs << fileX << "," << fileY;
 					cout << fileX << "," << fileY << endl;
 					fs.close();
@@ -74,7 +74,7 @@ int main(int argc, char **argv){
 				 
 			}
 		}
-		skipFrame = (skipFrame+1)%2;
+		skipFrame = (skipFrame+1)%10;
 		#ifdef WITH_SCREEN
 		screen.putImage(img);
 		c = waitKey(10);
